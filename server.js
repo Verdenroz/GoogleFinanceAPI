@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { createStockIndex, indices } = require('./indexModel');
-const scrapeIndices = require('./scraper');
+const scrapeIndices = require('./services/scrapeIndices');
 
 const app = express();
 const port = 3000;

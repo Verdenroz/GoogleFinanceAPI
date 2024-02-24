@@ -1,6 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { createStockIndex, indices } = require('./indexModel');
+const { createStockIndex, indices } = require('../indexModel');
 
 async function scrapeIndices() {
     const url = 'https://www.google.com/finance/markets/indexes';
