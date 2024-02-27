@@ -25,7 +25,6 @@ function createStockIndex(name, score, change, percentChange) {
     'Dow Jones Industrial Average',
     'Nasdaq Composite',
     'Russell 2000 Index',
-    'S&P/TSX Composite Index',
   ];
   
   module.exports = { createStockIndex, indices };

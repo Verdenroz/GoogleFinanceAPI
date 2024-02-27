@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 const axios = require("axios");
 const cheerio = require("cheerio");
-const {createStockIndex, indices} = require("../indexModel");
+const {createStockIndex, indices} = require("../models/indexModel");
 
 async function scrapeIndices() {
   /**
