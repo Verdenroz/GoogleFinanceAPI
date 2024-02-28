@@ -2,6 +2,7 @@
 const {onRequest} = require("firebase-functions/v2/https");
 const express = require("express");
 const scrapeIndices = require("./services/scrapeIndices");
+const {scrapeFullQuote, scrapeSimpleQuote} = require("./services/scrapeQuote");
 
 const app = express();
 const port = 3000;
@@ -17,8 +18,8 @@ app.get("/us/indices", async (req, res) => {
     });
   }
 });
-
-app.get("/search", (req, res) => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+app.get("/fullQuote", async (req, res) => {
   const { symbol, exchange } = req.query;
   try{
     if (!symbol || !exchange) {
@@ -27,10 +28,27 @@ app.get("/search", (req, res) => {
       });
       return;
     }
-    res.status(200).json({
-      symbol: symbol,
-      exchange: exchange,
+    const fullQuote = await scrapeFullQuote(symbol, exchange);
+    res.status(200).json(fullQuote);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "An error occurred while searching for the stock: " + error.message,
     });
+  }
+});
+
+app.get("/quote", async (req, res) => {
+  const { symbol, exchange } = req.query;
+  try{
+    if (!symbol || !exchange) {
+      res.status(400).json({
+        error: "Please provide both symbol and exchange query parameters",
+      });
+      return;
+    }
+    const fullQuote = await scrapeSimpleQuote(symbol, exchange);
+    res.status(200).json(fullQuote);
   } catch (error) {
     console.error(error);
     res.status(500).json({
