@@ -4,8 +4,10 @@
  * @param {string} symbol - The symbol of the stock.
  * @param {string} exchange - The exchange where the stock is traded.
  * @param {number} previousClose - The previous closing price of the stock.
+ * @param {number} change - The change in value of the stock.
+ * @param {number} percentChange - The percentage change in the stock price.
  * @param {number} current - The current price of the stock.
- * @param {number} open - The opening price of the stock.
+ * @param {number} aftermarketValue - The aftermarket value of the stock. Null if market is closed.
  * @param {number} high - The highest price of the stock for the day.
  * @param {number} low - The lowest price of the stock for the day.
  * @param {number} avgVolume - The average trading volume of the stock.
@@ -18,15 +20,11 @@
  * @param {number} change - The change in the stock price.
  * @param {number} percentChange - The percentage change in the stock price.
  * @param {string} about - Information about the stock.
- * @param {string} ceo - The CEO of the company.
- * @param {string} summary - A summary of the stock.
  * @param {number} employees - The number of employees in the company.
- * @param {string} website - The website of the company.
+ * @param {string} quarter - The quarter of the income statements.
  * @param {number} quarterlyRevenue - The quarterly revenue of the company.
- * @param {number} annualRevenue - The annual revenue of the company.
  * @param {number} quarterlyNetIncome - The quarterly net income of the company.
- * @param {number} annualNetIncome - The annual net income of the company.
- * @param {number} eps - The earnings per share of the company.
+ * @param {number} quarterlyEPS - The earnings per share of the company.
  * @returns {object} The full stock quote object with all the details.
  */
 function createFullStockQuote(
@@ -34,8 +32,10 @@ function createFullStockQuote(
     symbol,
     exchange,
     previousClose,
+    change,
+    percentChange,
     current,
-    open,
+    aftermarketValue,
     high,
     low,
     avgVolume,
@@ -48,24 +48,21 @@ function createFullStockQuote(
     change,
     percentChange,
     about,
-    ceo,
-    summary,
     employees,
-    website,
+    quarter,
     quarterlyRevenue,
-    annualRevenue,
     quarterlyNetIncome,
-    annualNetIncome,
-    eps,
-    news
+    quarterlyEPS,
 ) {
-    return {
+    return {  
         name,
         symbol,
         exchange,
         previousClose,
+        change,
+        aftermarketValue,
+        percentChange,
         current,
-        open,
         high,
         low,
         avgVolume,
@@ -78,15 +75,11 @@ function createFullStockQuote(
         change,
         percentChange,
         about,
-        ceo,
-        summary,
         employees,
-        website,
+        quarter,
         quarterlyRevenue,
-        annualRevenue,
         quarterlyNetIncome,
-        annualNetIncome,
-        eps,
+        quarterlyEPS,
     };
 }
 /**
@@ -110,3 +103,5 @@ function createSimpleQuote(
         current
     };
 }
+
+module.exports = {createFullStockQuote, createSimpleQuote};
