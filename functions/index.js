@@ -5,6 +5,7 @@ const scrapeIndices = require("./services/scrapeIndices");
 const {scrapeFullQuote, scrapeSimpleQuote} = require("./services/scrapeQuote");
 const {scrapeActiveStock} = require("./services/scrapeActiveStock");
 const {scrapeGainers} = require("./services/scrapeGainers");
+const {scrapeLosers} = require("./services/scrapeLosers");
 
 const app = express();
 const port = 3000;
@@ -75,6 +76,18 @@ app.get("/gainers", async (req, res) => {
   try {
     const gainers = await scrapeGainers();
     res.status(200).json(gainers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "An error occurred while scraping the website: " + error.message,
+    });
+  }
+});
+
+app.get("/losers", async (req, res) => {
+  try {
+    const losers = await scrapeLosers();
+    res.status(200).json(losers);
   } catch (error) {
     console.error(error);
     res.status(500).json({
