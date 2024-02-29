@@ -15,7 +15,6 @@
  * @param {number} peRatio - The price-to-earnings ratio of the stock.
  * @param {number} week52High - The highest price of the stock in the past 52 weeks.
  * @param {number} week52Low - The lowest price of the stock in the past 52 weeks.
- * @param {number} ytdChange - The year-to-date change in the stock price.
  * @param {number} dividendYield - The dividend yield of the stock.
  * @param {number} change - The change in the stock price.
  * @param {number} percentChange - The percentage change in the stock price.
@@ -43,7 +42,6 @@ function createFullStockQuote(
     peRatio,
     week52High,
     week52Low,
-    ytdChange,
     dividendYield,
     change,
     percentChange,
@@ -70,7 +68,6 @@ function createFullStockQuote(
         peRatio,
         week52High,
         week52Low,
-        ytdChange,
         dividendYield,
         change,
         percentChange,

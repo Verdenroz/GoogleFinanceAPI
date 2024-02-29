@@ -5,33 +5,11 @@ const moment = require("moment");
 const { createFullStockQuote, createSimpleQuote } = require("../models/quoteModel");
 
 /**
- * 
- *  name,
-    symbol,
-    exchange,
-    previousClose,
-    change,
-    percentChange,
-    current,
-    aftermarketValue,
-    open,
-    high,
-    low,
-    avgVolume,
-    marketCap,
-    peRatio,
-    week52High,
-    week52Low,
-    dividendYield,
-    change,
-    percentChange,
-    about,
-    summary,
-    employees,
-    quarter,
-    quarterlyRevenue,
-    quarterlyNetIncome,
-    quarterlyEPS,
+ * Scrapes complex data for a quote from Google Finance.
+ *  @param {string} symbol - The stock symbol.
+ *  @param {string} exchange - The stock exchange.
+ *  @see {@link createFullStockQuote}
+ *  @returns {object} The full stock quote object with all the details.
  */
 
 async function scrapeFullQuote(symbol, exchange) {
@@ -57,7 +35,6 @@ async function scrapeFullQuote(symbol, exchange) {
   const high = dataArray[3];
   const week52Low = dataArray[4].split("-")[0].trim();
   const week52High = dataArray[5].match(/\d+\.\d{2}/)[0];
-  const ytdChange = (current - week52Low).toFixed(2);
   const marketCap = dataArray[5].split(week52High)[1].match(/\d+\.\d{2}(T|B|M) USD/)[0];
   const avgVolume = dataArray[5].match(/\d+\.\d{2}M/)[0];
   const peRatio = dataArray[5].split(avgVolume)[1].match(/\d+\.\d{2}/)[0];
@@ -86,7 +63,6 @@ async function scrapeFullQuote(symbol, exchange) {
     peRatio,
     week52High,
     week52Low,
-    ytdChange,
     dividendYield,
     change,
     percentChange,
@@ -99,6 +75,13 @@ async function scrapeFullQuote(symbol, exchange) {
   );
 }
 
+/**
+ * Scrapes the simple information for a quote from Google Finance.
+ * @param {string} symbol - The stock symbol.
+ * @param {string} exchange - The stock exchange.
+ * @see {@link createSimpleQuote}
+ * @returns {object} The simple stock quote object with the current price.
+ */
 async function scrapeSimpleQuote(symbol, exchange) {
   const url = `https://www.google.com/finance/quote/${symbol}:${exchange}`;
   const { data } = await axios.get(url);
