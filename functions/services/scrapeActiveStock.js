@@ -1,11 +1,11 @@
 /* eslint-disable require-jsdoc */
 const axios = require("axios");
 const cheerio = require("cheerio");
-const {createActiveStockModel} = require("../models/activeStockModel")
+const {createStockModel} = require("../models/stockModel")
 
 /**
  * Scrapes the most active stocks from the Google Finance website.
- * @see {createActiveStockModel}
+ * @see {@link createStockModel}
  * @see https://www.google.com/finance/markets/most-active
  * @returns {Promise<Array>} - An array of active stocks.
  */
@@ -47,7 +47,7 @@ async function scrapeActiveStock(){
     });
     //creates active stock model for each
     for (let i = 0; i < symbols.length; i++) {
-        activeStocks.push(createActiveStockModel(
+        activeStocks.push(createStockModel(
             symbols[i],
             names[i],
             values[i],
