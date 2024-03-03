@@ -46,7 +46,13 @@ async function scrapeIndices() {
   for (let i = 0; i < indices.length; i++) {
     endIndex = startIndex + indices[i].length;
     if (change[i] < 0) {
+      change[i] = `-${change[i]}`;
       percentageChange[i] = `-${percentageChange[i]}`;
+    }
+    else{
+      change[i] = `+${change[i]}`;
+      percentageChange[i] = `+${percentageChange[i]}`;
+    
     }
     const index = createStockIndex(indexNames.substring(startIndex, endIndex), scores[i], change[i], percentageChange[i]);
     stockIndex.push(index);
