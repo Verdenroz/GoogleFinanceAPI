@@ -6,6 +6,7 @@ const {scrapeFullQuote, scrapeSimpleQuote} = require("./services/scrapeQuote");
 const {scrapeActiveStock} = require("./services/scrapeActiveStock");
 const {scrapeGainers} = require("./services/scrapeGainers");
 const {scrapeLosers} = require("./services/scrapeLosers");
+const {scrapeNews} = require("./services/scrapeNews");
 
 const app = express();
 const port = 3000;
@@ -92,6 +93,25 @@ app.get("/losers", async (req, res) => {
     console.error(error);
     res.status(500).json({
       error: "An error occurred while scraping the website: " + error.message,
+    });
+  }
+});
+
+app.get("/news", async (req, res) => {
+  const { symbol, exchange } = req.query;
+  try{
+    if (!symbol || !exchange) {
+      res.status(400).json({
+        error: "Please provide both symbol and exchange query parameters",
+      });
+      return;
+    }
+    const news = await scrapeNews(symbol, exchange);
+    res.status(200).json(news);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "An error occurred while searching for the stock: " + error.message,
     });
   }
 });
