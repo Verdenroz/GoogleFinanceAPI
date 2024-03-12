@@ -18,21 +18,32 @@
  * SOFTWARE.
  */
 
-const {onRequest} = require("firebase-functions/v2/https");
+const { onRequest } = require("firebase-functions/v2/https");
 const express = require("express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerUi = require("swagger-ui-express");
 const scrapeIndices = require("./services/scrapeIndices");
-const {scrapeFullQuote, scrapeSimpleQuote} = require("./services/scrapeQuote");
-const {scrapeActiveStock} = require("./services/scrapeActiveStock");
-const {scrapeGainers} = require("./services/scrapeGainers");
-const {scrapeLosers} = require("./services/scrapeLosers");
-const {scrapeNews} = require("./services/scrapeNews");
+const {scrapeFullQuote, scrapeSimpleQuote,} = require("./services/scrapeQuote");
+const { scrapeActiveStock } = require("./services/scrapeActiveStock");
+const { scrapeGainers } = require("./services/scrapeGainers");
+const { scrapeLosers } = require("./services/scrapeLosers");
+const { scrapeNews } = require("./services/scrapeNews");
 
 const app = express();
 const port = 3000;
 
-app.get("/us/indices", async (req, res) => {
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get("/indices", async (req, res) => {
+  const { region, country} = req.query;
   try {
-    const stockIndex = await scrapeIndices();
+    let stockIndex;
+    if (country) {
+      stockIndex = await scrapeIndicesByCountry(country);
+    } else {
+      stockIndex = await scrapeIndices(region);
+    }
     res.status(200).json(stockIndex);
   } catch (error) {
     console.error(error);
@@ -41,10 +52,10 @@ app.get("/us/indices", async (req, res) => {
     });
   }
 });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
 app.get("/fullQuote", async (req, res) => {
   const { symbol, exchange } = req.query;
-  try{
+  try {
     if (!symbol || !exchange) {
       res.status(400).json({
         error: "Please provide both symbol and exchange query parameters",
@@ -56,14 +67,15 @@ app.get("/fullQuote", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "An error occurred while searching for the stock: " + error.message,
+      error:
+        "An error occurred while searching for the stock: " + error.message,
     });
   }
 });
 
 app.get("/quote", async (req, res) => {
   const { symbol, exchange } = req.query;
-  try{
+  try {
     if (!symbol || !exchange) {
       res.status(400).json({
         error: "Please provide both symbol and exchange query parameters",
@@ -118,7 +130,7 @@ app.get("/losers", async (req, res) => {
 
 app.get("/news", async (req, res) => {
   const { symbol, exchange } = req.query;
-  try{
+  try {
     if (!symbol || !exchange) {
       res.status(400).json({
         error: "Please provide both symbol and exchange query parameters",
@@ -130,7 +142,8 @@ app.get("/news", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "An error occurred while searching for the stock: " + error.message,
+      error:
+        "An error occurred while searching for the stock: " + error.message,
     });
   }
 });

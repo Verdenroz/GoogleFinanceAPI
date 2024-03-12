@@ -21,62 +21,48 @@
 /* eslint-disable require-jsdoc */
 const axios = require("axios");
 const cheerio = require("cheerio");
-const {createStockIndex, indices} = require("../models/indexModel");
-
-async function scrapeIndices() {
-  /**
-   * Google Finance URL for market indices
-   */
-  const url = "https://www.google.com/finance/markets/indexes";
-  /**
-   * Fetch the data from the URL
-   */
-  const {data} = await axios.get(url);
-  /**
-   * Load the data into cheerio
-   */
+const { createStockIndex } = require("../models/indexModel");
+/**
+ * 
+ * @param {string} region Either "americas", "europe-middle-east-africa", or "asia-pacific"
+ * @returns {Promise<Array>}  An array of the region's indices
+ */
+async function scrapeIndices(region) {
+  //build url
+  const url = "https://www.google.com/finance/markets/indexes/" + region;
+  //fetch data
+  const { data } = await axios.get(url);
+  //load data into cheerio
   const $ = cheerio.load(data);
-  /**
-   * Extracts names from HTML
-   */
-  const indexNames = $(".Q8lakc .ZvmM7").text();
-  /**
-   * Extracts current value of indices from HTML
-   */
-  const scores = $(".xVyTdb .YMlKec").text().replace(/,/g, "").match(/\d+\.\d{2}/g).map(parseFloat).slice(0, indices.length);
-  /**
-   * Extracts change in value of indices from HTML
-   */
-  const change = $(".xVyTdb .SEGxAb .P2Luy").text().match(/[-+]\d+\.\d{2}/g).map(parseFloat).slice(0, indices.length);
-  /**
-   * Extracts percentage change in value of indices from HTML
-   */
-  const percentageChange = $(".xVyTdb .JwB6zf").text().match(/\d+\.\d+%?/g).slice(0, indices.length);
-
-  let startIndex = 0;
-  let endIndex = 0;
-  /**
-   * Create an array of stock indices
-   */
+  //arrays to store data
   const stockIndex = [];
+  const indexNames = [];
+  const scores = [];
+  const changes = [];
+  const percentageChanges = [];
 
-  /**
-   * Loop through the indices and create an array of stock indices
-   */
-  for (let i = 0; i < indices.length; i++) {
-    endIndex = startIndex + indices[i].length;
-    if (change[i] < 0) {
-      change[i] = `-${change[i]}`;
-      percentageChange[i] = `-${percentageChange[i]}`;
-    }
-    else{
-      change[i] = `+${change[i]}`;
-      percentageChange[i] = `+${percentageChange[i]}`;
-    
-    }
-    const index = createStockIndex(indexNames.substring(startIndex, endIndex), scores[i], change[i], percentageChange[i]);
-    stockIndex.push(index);
-    startIndex = endIndex;
+  //scrape names
+  $(".ZvmM7").each(function (i, element) {
+    indexNames.push($(element).text());
+  });
+
+  //scrape scores (current index value)
+  $(".xVyTdb .YMlKec ").each(function (i, element) {
+    scores.push($(element).text());
+  });
+
+  //scrape changes
+  $(".xVyTdb .SEGxAb .P2Luy").each(function (i, element) {
+    changes.push($(element).text());
+  });
+
+  //scrape percentage changes
+  $(".xVyTdb .JwB6zf").each(function (i, element) {
+    percentageChanges.push($(element).text());
+  });
+
+  for(let i = 0; i < indexNames.length; i++) {
+    stockIndex.push(createStockIndex(indexNames[i], scores[i], changes[i], percentageChanges[i]));
   }
 
   return stockIndex;

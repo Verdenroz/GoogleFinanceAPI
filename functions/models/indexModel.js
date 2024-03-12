@@ -27,24 +27,23 @@
  * @returns {Object} JSON model for stock index
  */
 function createStockIndex(name, score, change, percentChange) {
-    return {
-      stockIndex: {
-        name: name,
-        score: score,
-        change, change,
-        percentChange: percentChange
-      }
-    };
-  }
+  return {
+    name: name,
+    score: score,
+    change,
+    change,
+    percentChange: percentChange,
+  };
+}
 
-  /**
-   * Array of indices for the U.S. stock market
-   */
-  const indices = [
-    'S&P 500',
-    'Dow Jones Industrial Average',
-    'Nasdaq Composite',
-    'Russell 2000 Index',
-  ];
-  
-  module.exports = { createStockIndex, indices };
+/**
+ * Array of indices for the U.S. stock market
+ */
+const indicesUS = [
+  "S&P 500",
+  "Dow Jones Industrial Average",
+  "Nasdaq Composite",
+  "Russell 2000 Index",
+];
+
+module.exports = { createStockIndex, indicesUS };
