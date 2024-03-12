@@ -24,6 +24,7 @@ const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
 const swaggerUi = require("swagger-ui-express");
 const scrapeIndices = require("./services/scrapeIndices");
+const scrapeIndicesByCountry = require("./services/scrapeIndicesByCountry");
 const {scrapeFullQuote, scrapeSimpleQuote,} = require("./services/scrapeQuote");
 const { scrapeActiveStock } = require("./services/scrapeActiveStock");
 const { scrapeGainers } = require("./services/scrapeGainers");
