@@ -68,6 +68,7 @@ async function scrapeActiveStock(){
     });
     //creates active stock model for each
     for (let i = 0; i < symbols.length; i++) {
+        percentChanges[i] = changes[i].includes("-") ? "-" + percentChanges[i] : "+" + percentChanges[i];
         activeStocks.push(createStockModel(
             symbols[i],
             names[i],

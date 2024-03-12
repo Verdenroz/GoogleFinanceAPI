@@ -62,7 +62,7 @@ async function scrapeGainers(){
     });
     //scrapes percent changes
     $(".Sy70mc .JwB6zf").each(function(i, element){
-        const percentChange = $(element).text();
+        const percentChange = "+" + $(element).text();
         percentChanges.push(percentChange);
     });
     //creates active stock model for each
