@@ -65,8 +65,6 @@ async function scrapeFullQuote(symbol, exchange) {
   const quarterlyRevenue = $('tr:contains("Revenue") .QXDnM').text();
   const quarterlyNetIncome = $('tr:contains("Net income") .QXDnM').text().match(/(\d+\.\d+)([BM]?)?/g)[0];
   const eps = $('tr:contains("Earnings per share") .QXDnM').text();
-  console.log(quarterlyNetIncome);
-  console.log(quarterlyRevenue);
   return createFullStockQuote(
     name,
     stockSymbol,

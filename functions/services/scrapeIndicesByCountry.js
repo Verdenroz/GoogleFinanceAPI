@@ -54,7 +54,6 @@ async function scrapeIndicesByCountry(country) {
   const scores = [];
   const changes = [];
   const percentageChanges = [];
-  console.log(url);
 
   //scrape names, scores, changes, and percentage changes
   $(".ZvmM7").each(function (i, element) {
