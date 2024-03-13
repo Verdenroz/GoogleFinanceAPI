@@ -21,8 +21,6 @@
 /**
  * Creates a full stock quote object.
  * @param {string} name - The name of the stock.
- * @param {string} symbol - The symbol of the stock.
- * @param {string} exchange - The exchange where the stock is traded.
  * @param {number} previousClose - The previous closing price of the stock.
  * @param {number} change - The change in value of the stock.
  * @param {number} percentChange - The percentage change in the stock price.
@@ -48,8 +46,6 @@
  */
 function createFullStockQuote(
     name,
-    symbol,
-    exchange,
     previousClose,
     change,
     percentChange,
@@ -74,8 +70,6 @@ function createFullStockQuote(
 ) {
     return {  
         name,
-        symbol,
-        exchange,
         previousClose,
         change,
         aftermarketValue,
@@ -102,20 +96,22 @@ function createFullStockQuote(
 /**
  * Creates a simple stock quote object.
  * @param {string} name - The name of the stock.
- * @param {string} symbol - The symbol of the stock.
- * @param {string} exchange - The exchange where the stock is traded.
- * @param {number} current - The current price of the stock.
+ * @param {string} current - The current price of the stock.
+ * @param {string} change - The change in value of the stock.
+ * @param {string} percentChange - The percentage change in the stock price.
  * @returns {object} The simple stock quote object with the basic details.
  */
 function createSimpleQuote(
     name,
-    symbol,
     current,
+    change,
+    percentChange
 ) {
     return {
         name,
-        symbol,
-        current
+        current,
+        change,
+        percentChange
     };
 }
 

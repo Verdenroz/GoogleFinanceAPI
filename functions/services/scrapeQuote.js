@@ -41,8 +41,6 @@ async function scrapeFullQuote(symbol, exchange) {
   const dataArray = $(".P6K39c").text().split("$");
 
   const name = $(".zzDege").text();
-  const stockSymbol = symbol;
-  const primaryExchange = exchange;
   const current = values[0];
   let aftermarketValue = "N/A";
   if (moment().isAfter(moment().hour(16).minute(0).second(0))) {
@@ -50,7 +48,7 @@ async function scrapeFullQuote(symbol, exchange) {
   }
   const previousClose = dataArray[1];
   const change = (current - previousClose).toFixed(2);
-  const percentChange = ((change / previousClose) * 100).toFixed(2) + "%";
+  const percentChange = `${change >= 0 ? "+" : "-"}${((Math.abs(change) / previousClose) * 100).toFixed(2)}%`;
   const low = dataArray[2].split("-")[0].trim();
   const high = dataArray[3];
   const week52Low = dataArray[4].split("-")[0].trim();
@@ -67,8 +65,6 @@ async function scrapeFullQuote(symbol, exchange) {
   const eps = $('tr:contains("Earnings per share") .QXDnM').text();
   return createFullStockQuote(
     name,
-    stockSymbol,
-    primaryExchange,
     previousClose,
     change,
     percentChange,
@@ -104,14 +100,18 @@ async function scrapeSimpleQuote(symbol, exchange) {
   const url = `https://www.google.com/finance/quote/${symbol}:${exchange}`;
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
+  const dataArray = $(".P6K39c").text().split("$");
 
   const name = $(".zzDege").text();
-  const stockSymbol = symbol;
   const current = $(".YMlKec.fxKbKc").text().replace("$", "").split("$")[0];
+  const previousClose = dataArray[1];
+  const change = (current - previousClose).toFixed(2);
+  const percentChange = `${change >= 0 ? "+" : "-"}${((Math.abs(change) / previousClose) * 100).toFixed(2)}%`;
   return createSimpleQuote(
     name,
-    stockSymbol,
-    current
+    current,
+    change,
+    percentChange
   )
 }
 
