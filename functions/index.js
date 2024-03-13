@@ -41,7 +41,7 @@ app.get("/indices", async (req, res) => {
   try {
     let stockIndex;
     if (country) {
-      stockIndex = await scrapeIndicesByCountry(country);
+      stockIndex = await scrapeIndicesByCountry(region, country);
     } else {
       stockIndex = await scrapeIndices(region);
     }

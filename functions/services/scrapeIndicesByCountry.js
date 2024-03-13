@@ -23,24 +23,22 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const { createStockIndex, indicesUS } = require("../models/indexModel");
 
-//map country to region
+//map country to indices
 //Google Finance uses three regions - "americas", "europe-middle-east-africa", and "asia-pacific"
 const countryToRegionMap = {
-  US: "americas",
-  UK: "europe-middle-east-africa",
-  JP: "asia-pacific",
-  // add more countries and regions as needed
+  US: indicesUS,
+  //add more countries here
 };
 
 /**
  * @param {string} country Country from which to scrape indices
  * @returns {Promise<Array>}  An array of the country's indices
  */
-async function scrapeIndicesByCountry(country) {
+async function scrapeIndicesByCountry(region, country) {
   //map country to region
-  const region = countryToRegionMap[country];
-  if (!region) {
-    throw new Error(`No region found for country: ${country}`);
+  const indices = countryToRegionMap[country];
+  if (!indices) {
+    throw new Error(`No indices found for country: ${country}`);
   }
   //build url
   const url = "https://www.google.com/finance/markets/indexes/" + region;
@@ -58,7 +56,7 @@ async function scrapeIndicesByCountry(country) {
   //scrape names, scores, changes, and percentage changes
   $(".ZvmM7").each(function (i, element) {
     const indexName = $(element).text();
-    if (indicesUS.includes(indexName)) {
+    if (indices.includes(indexName)) {
       indexNames.push(indexName);
       scores.push($(".xVyTdb .YMlKec ").eq(i).text());
       changes.push($(".xVyTdb .SEGxAb .P2Luy").eq(i).text());
