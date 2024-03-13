@@ -110,13 +110,11 @@ function createFullStockQuote(
 function createSimpleQuote(
     name,
     symbol,
-    exchange,
     current,
 ) {
     return {
         name,
         symbol,
-        exchange,
         current
     };
 }

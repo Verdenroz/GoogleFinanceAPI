@@ -107,12 +107,10 @@ async function scrapeSimpleQuote(symbol, exchange) {
 
   const name = $(".zzDege").text();
   const stockSymbol = symbol;
-  const primaryExchange = exchange;
   const current = $(".YMlKec.fxKbKc").text().replace("$", "").split("$")[0];
   return createSimpleQuote(
     name,
     stockSymbol,
-    primaryExchange,
     current
   )
 }
