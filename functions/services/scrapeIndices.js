@@ -23,7 +23,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const { createStockIndex } = require("../models/indexModel");
 /**
- * 
+ *
  * @param {string} region Either "americas", "europe-middle-east-africa", or "asia-pacific"
  * @returns {Promise<Array>}  An array of the region's indices
  */
@@ -61,8 +61,16 @@ async function scrapeIndices(region) {
     percentageChanges.push($(element).text());
   });
 
-  for(let i = 0; i < indexNames.length; i++) {
-    stockIndex.push(createStockIndex(indexNames[i], scores[i], changes[i], percentageChanges[i]));
+  for (let i = 0; i < indexNames.length; i++) {
+    percentageChanges[i] = changes[i].includes("-") ? "-" + percentageChanges[i] : "+" + percentageChanges[i];
+    stockIndex.push(
+      createStockIndex(
+        indexNames[i],
+        scores[i],
+        changes[i],
+        percentageChanges[i]
+      )
+    );
   }
 
   return stockIndex;

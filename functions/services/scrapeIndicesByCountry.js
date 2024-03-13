@@ -60,7 +60,14 @@ async function scrapeIndicesByCountry(region, country) {
       indexNames.push(indexName);
       scores.push($(".xVyTdb .YMlKec ").eq(i).text());
       changes.push($(".xVyTdb .SEGxAb .P2Luy").eq(i).text());
+      const change = parseFloat($(".xVyTdb .SEGxAb .P2Luy").eq(i).text());
+      if (change > 0) {
+      percentageChanges.push("+" + $(".xVyTdb .JwB6zf").eq(i).text());
+      } else if (change < 0) {
+      percentageChanges.push("-" + $(".xVyTdb .JwB6zf").eq(i).text());
+      } else {
       percentageChanges.push($(".xVyTdb .JwB6zf").eq(i).text());
+      }
     }
   });
 
