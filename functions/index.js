@@ -38,6 +38,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/indices", async (req, res) => {
   const { region, country} = req.query;
+  if (!region) {
+    res.status(400).json({
+      error: "Please provide region query parameter (americas, europe-middle-east-africa, or asia-pacific)",
+    });
+    return;
+  }
   try {
     let stockIndex;
     if (country) {
