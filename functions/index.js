@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+require('dotenv').config();
 const { onRequest } = require("firebase-functions/v2/https");
 const express = require("express");
 const YAML = require("yamljs");
@@ -25,6 +25,7 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 const swaggerUi = require("swagger-ui-express");
 const scrapeIndices = require("./services/scrapeIndices");
 const scrapeIndicesByCountry = require("./services/scrapeIndicesByCountry");
+const cors = require('cors');
 const {scrapeFullQuote, scrapeSimpleQuote,} = require("./services/scrapeQuote");
 const { scrapeActiveStock } = require("./services/scrapeActiveStock");
 const { scrapeGainers } = require("./services/scrapeGainers");
@@ -33,6 +34,13 @@ const { scrapeNews } = require("./services/scrapeNews");
 
 const app = express();
 const port = 3000;
+
+const corsOptions = {
+  origin: process.env.ORIGIN,
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
