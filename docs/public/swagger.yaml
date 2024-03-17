@@ -1,0 +1,462 @@
+openapi: "3.0.0"
+info:
+  title: "Google Finance API"
+  version: "1.0"
+  description: "A simple web scraper to get data from Google Finance"
+  contact:
+    url: "https://github.com/Verdenroz/GoogleFinanceAPI"
+    email: "harveytseng2@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+servers:
+  - url: "https://app-coujq7nbwq-uc.a.run.app"
+
+paths:
+  /indices:
+    get:
+      summary: "Scrape indices by region or country"
+      description: "Scrape indices from Google Finance by region or country. Country scraping is only available for the U.S. currently. If you would like to scrape indices from other countries, please open an issue on the GitHub repository or add another array inside the code."
+      parameters:
+        - in: query
+          name: region
+          schema:
+            type: string
+            enum: ["americas", "europe-middle-east-africa", "asia-pacific"]
+            required: true
+            description: "Google Finance "
+        - in: query
+          name: country
+          schema:
+            type: string
+            required: false
+            enum: ["US"]
+            description: "The country to get indices from"
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: "An array of the region's or country's indices"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockIndex"
+        "400":
+          description: "No region provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide region query parameter (americas, europe-middle-east-africa, or asia-pacific)"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /active:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the most active stocks from Google Finance"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockModel"
+        "500":
+          description: "An error occurred while scraping the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /gainers:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the top gaining stocks from Google Finance"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockModel"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /losers:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the top losing stocks from Google Finance"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockModel"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /news:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the latest news for a stock from Google Finance"
+      parameters:
+        - in: query
+          name: symbol
+          schema:
+            type: string
+            required: true
+            description: "The stock symbol"
+        - in: query
+          name: exchange
+          schema:
+            type: string
+            required: true
+            description: "The exchange the stock is listed on"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsModel"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /quote:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the simple stock price and information from Google Finance"
+      parameters:
+        - in: query
+          name: symbol
+          schema:
+            type: string
+            required: true
+            description: "The stock symbol"
+            default: "AAPL"
+        - in: query
+          name: exchange
+          schema:
+            type: string
+            required: true
+            description: "The exchange the stock is listed on"
+            default: "NASDAQ"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleQuote"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+  /fullQuote:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the full stock information and advanced metrics from Google Finance"
+      parameters:
+        - in: query
+          name: symbol
+          schema:
+            type: string
+            required: true
+            description: "The stock symbol"
+            default: "AAPL"
+        - in: query
+          name: exchange
+          schema:
+            type: string
+            required: true
+            description: "The exchange the stock is listed on"
+            default: "NASDAQ"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FullQuote"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    StockIndex:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Name of index"
+          default: "Dow Jones Industrial Average"
+        score:
+          type: string
+          description: "Current value of index"
+          default: "30,000.00"
+        change:
+          type: string
+          description: "Change in value of index"
+          default: "+100.00"
+        percentChange:
+          type: string
+          description: "Percentage change in value of index"
+          default: "+1.00%"
+    StockModel:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The stock symbol
+          default: "AAPL"
+        name:
+          type: string
+          description: The stock name
+          default: "Apple Inc."
+        current:
+          type: string
+          description: The current value of the stock
+          default: "100.00"
+        change:
+          type: string
+          description: The change in the stock value
+          default: "0.00"
+        percentChange:
+          type: string
+          description: The percentage change in the stock value
+          default: "0.00"
+    NewsModel:
+      type: object
+      properties:
+        headline:
+          type: string
+          description: The news headline
+          default: "Apple Inc. to release new iPhone"
+        image:
+          type: string
+          description: The URL of the news image
+          default: "https://example.com/image.jpg"
+        source:
+          type: string
+          description: The source of the news
+          default: "Bloomberg"
+        url:
+          type: string
+          description: The URL of the news
+          default: "https://example.com/news"
+    SimpleQuote:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The stock name
+          default: "Apple Inc."
+        current:
+          type: string
+          description: The current value of the stock
+          default: "100.00"
+        change:
+          type: string
+          description: The change in the stock value
+          default: "0.00"
+        percentChange:
+          type: string
+          description: The percentage change in the stock value
+          default: "0.00"
+    FullQuote:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the stock
+          default: "Apple Inc."
+        previousClose:
+          type: string
+          format: float
+          description: The previous closing value of the stock
+          default: "100.00"
+        change:
+          type: string
+          format: float
+          description: The change in the stock value
+          default: "0.00"
+        percentChange:
+          type: string
+          description: The percentage change in the stock value
+          default: "0.00"
+        current:
+          type: string
+          description: The current value of the stock
+          default: "100.00"
+        aftermarketValue:
+          type: string
+          description: The aftermarket value of the stock
+          default: "100.00"
+        high:
+          type: string
+          description: The highest value of the stock
+          default: "200.00"
+        low:
+          type: string
+          description: The lowest value of the stock
+          default: "50.00"
+        avgVolume:
+          type: string
+          format: float
+          description: The average volume of the stock
+          default: "50M"
+        marketCap:
+          type: string
+          description: The market capitalization of the stock
+          default: "1T"
+        peRatio:
+          type: string
+          description: The price-to-earnings ratio of the stock
+          default: "20.00"
+        week52High:
+          type: string
+          description: The 52-week high value of the stock
+          default: "200.00"
+        week52Low:
+          type: string
+          description: The 52-week low value of the stock
+          default: "50.00"
+        dividendYield:
+          type: string
+          description: The dividend yield of the stock
+          default: "2.00"
+        about:
+          type: string
+          description: Information about the stock
+          default: "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide."
+        employees:
+          type: string
+          description: The number of employees in the company
+          default: "100,000"
+        quarter:
+          type: string
+          description: The quarter of the financial year
+          default: "Dec 2021"
+        quarterlyRevenue:
+          type: string
+          description: The quarterly revenue of the company
+          default: "100B"
+        quarterlyNetIncome:
+          type: string
+          description: The quarterly net income of the company
+          default: "20B"
+        quarterlyEPS:
+          type: string
+          description: The quarterly earnings per share of the company
+          default: "2.00"
