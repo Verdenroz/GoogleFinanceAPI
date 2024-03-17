@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: "Google Finance API"
-  version: "0.1"
+  version: "1.0"
   description: "A simple web scraper to get data from Google Finance"
   contact:
     url: "https://github.com/Verdenroz/GoogleFinanceAPI"
@@ -11,6 +11,7 @@ info:
     url: "https://opensource.org/licenses/MIT"
 servers:
   - url: "http://localhost:3000"
+  - url: "https://app-coujq7nbwq-uc.a.run.app"
 
 paths:
   /indices:
@@ -32,6 +33,8 @@ paths:
             required: false
             enum: ["US"]
             description: "The country to get indices from"
+      security:
+        - ApiKeyAuth: []
       responses:
         "200":
           description: "An array of the region's or country's indices"
@@ -41,29 +44,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/StockIndex"
-        "500":
-          description: "Unable to scrape the website"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: "Error message"
-                    default: "An error occurred while scraping the website"
-  /active:
-    get:
-      summary: "Get the most active stocks from Google Finance"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/StockModel"
         "400":
           description: "No region provided"
           content:
@@ -86,31 +66,60 @@ paths:
                     type: string
                     description: "Error message"
                     default: "An error occurred while scraping the website"
+  /active:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the most active stocks from Google Finance"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockModel"
+        "500":
+          description: "An error occurred while scraping the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
   /gainers:
     get:
-    summary: "Get the top gaining stocks from Google Finance"
-    responses:
-      "200":
-        description: "Successful response"
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/StockModel"
-      "500":
-        description: "Unable to scrape the website"
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
-                  description: "Error message"
-                  default: "An error occurred while scraping the website"
+      security:
+        - ApiKeyAuth: []
+      summary: "Get the top gaining stocks from Google Finance"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockModel"
+        "500":
+          description: "Unable to scrape the website"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "An error occurred while scraping the website"
   /losers:
     get:
+      security:
+        - ApiKeyAuth: []
       summary: "Get the top losing stocks from Google Finance"
       responses:
         "200":
@@ -134,6 +143,8 @@ paths:
                     default: "An error occurred while scraping the website"
   /news:
     get:
+      security:
+        - ApiKeyAuth: []
       summary: "Get the latest news for a stock from Google Finance"
       parameters:
         - in: query
@@ -157,6 +168,17 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/NewsModel"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
         "500":
           description: "Unable to scrape the website"
           content:
@@ -170,6 +192,8 @@ paths:
                     default: "An error occurred while scraping the website"
   /quote:
     get:
+      security:
+        - ApiKeyAuth: []
       summary: "Get the simple stock price and information from Google Finance"
       parameters:
         - in: query
@@ -193,6 +217,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SimpleQuote"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
         "500":
           description: "Unable to scrape the website"
           content:
@@ -206,6 +241,8 @@ paths:
                     default: "An error occurred while scraping the website"
   /fullQuote:
     get:
+      security:
+        - ApiKeyAuth: []
       summary: "Get the full stock information and advanced metrics from Google Finance"
       parameters:
         - in: query
@@ -229,6 +266,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FullQuote"
+        "400":
+          description: "No symbol or exchange provided"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "Error message"
+                    default: "Please provide both symbol and exchange query parameters"
         "500":
           description: "Unable to scrape the website"
           content:
@@ -241,6 +289,11 @@ paths:
                     description: "Error message"
                     default: "An error occurred while scraping the website"
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
   schemas:
     StockIndex:
       type: object
