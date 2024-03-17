@@ -20,6 +20,7 @@
 require('dotenv').config();
 const { onRequest } = require("firebase-functions/v2/https");
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
 const swaggerUi = require("swagger-ui-express");
@@ -35,12 +36,33 @@ const { scrapeNews } = require("./services/scrapeNews");
 const app = express();
 const port = 3000;
 
-const corsOptions = {
-  origin: process.env.ORIGIN,
+corsOptions = {
+  origin: [process.env.ORIGIN, "http://localhost:3000", "https://gfinance-api-doc.web.app", "https://gfinance-api-doc.firebaseapp.com"],
   optionsSuccessStatus: 200
-}
+};
 
 app.use(cors(corsOptions));
+
+const demoApiKey = "demo";
+//limits demo key to 10 requests a minute
+const demoApiLimiter = rateLimit({
+  windowMs: 60000,
+  max: 10,
+  message: "Too many requests from this IP, please try again after a minute"
+});
+
+app.use((req, res, next) => {
+  let apiKey = req.get('X-API-Key');
+  if (!apiKey) {
+    apiKey = demoApiKey;
+    req.headers['x-api-key'] = demoApiKey;
+    demoApiLimiter(req, res, next);
+  } else if (apiKey === process.env.API_KEY) {
+    next();
+  } else {
+    demoApiLimiter(req, res, next);
+  }
+});
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
