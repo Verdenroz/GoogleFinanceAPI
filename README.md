@@ -3,6 +3,8 @@
 >
 >As of **Dec 9, 2024**, this project is no longer maintained by the original developers. No further updates, bug fixes, or support will be provided. (Though honestly it has been unofficially dead for months already)
 >
+>I am currently maintaining [FinanceQuery](https://github.com/Verdenroz/finance-query), which is the successor to this GoogleFinanceAPI repository. FinanceQuery is a much more reliable scraper with more features and available data.
+>
 >- **Pull Requests and Issues**: I will not be reviewing or merging pull requests, nor responding to issues or discussions.
 >
 >- **Forking and Future Development**: In accordance with the [MIT License](LICENSE), you are encouraged to **fork this repository** to continue development independently. You are free to modify, distribute, and release your own versions under the same license.
