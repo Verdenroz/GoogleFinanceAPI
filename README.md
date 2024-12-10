@@ -1,3 +1,23 @@
+>[!IMPORTANT]
+>**🚨 Notice: Project No Longer Maintained 🚨**
+>
+>As of **Dec 9, 2024**, this project is no longer maintained by the original developers. No further updates, bug fixes, or support will be provided. (Though honestly it has been unofficially dead for months already)
+>
+>- **Pull Requests and Issues**: I will not be reviewing or merging pull requests, nor responding to issues or discussions.
+>
+>- **Forking and Future Development**: In accordance with the [MIT License](LICENSE), you are encouraged to **fork this repository** to continue development independently. You are free to modify, distribute, and release your own versions under the same license.
+>
+>- **Disclaimer of Liability**:
+>  - **"As-Is" Basis**: This software is provided on an "as-is" basis without any warranties or conditions of any kind, either express or implied.
+>  - **No Liability**: The original maintainers shall not be liable for any claims, damages, or other liabilities arising from the use, modification, or distribution of this software.
+>  - **User Responsibility**: Users and developers who choose to use or fork this project assume all risks and responsibilities associated with its use and further development.
+>
+>For more information, please refer to the [LICENSE](LICENSE) file.
+>
+>![License](https://img.shields.io/badge/license-MIT-blue.svg?style=plastic)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+
 # Google Finance API
 
 The Google Finance API is a tool that provides financial data, including stock indices, quotes, active stocks, gainers, losers, and news. It's built with Node.js and Express, and uses web scraping to gather data from Google Finance.
